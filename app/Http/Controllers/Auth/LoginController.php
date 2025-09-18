@@ -13,7 +13,7 @@ class LoginController extends Controller
     /**
      * Where to redirect users after login.
      */
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/home';
 
     public function __construct()
     {
