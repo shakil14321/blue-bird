@@ -16,16 +16,21 @@
       </div>
     @endif
 
-    <form action="{{ route('admin.categories.store') }}" method="POST">
-      @csrf
-      <div class="mb-3">
-        <label for="name" class="form-label">Category Name</label>
-        <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Create</button>
-      {{-- <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Add Category</a> --}}
+    <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+  @csrf
+  <div class="mb-3">
+    <label for="name" class="form-label">Category Name</label>
+    <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+  </div>
 
-    </form>
+  <div class="mb-3">
+    <label for="images" class="form-label">Category Images</label>
+    <input type="file" name="images[]" id="images" class="form-control" multiple>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
   </div>
 </div>
 @endsection

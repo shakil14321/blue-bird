@@ -10,7 +10,7 @@ class AdminCategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -20,15 +20,33 @@ class AdminCategoryController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:25'
-        ]);
+{
+    $request->validate([
+        'name'   => 'required|string|max:25',
+        'images' => 'nullable|array',
+        'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
+    ]);
 
-        Category::create($request->only('name'));
+    // Create category
+    $category = Category::create([
+        'name' => $request->name
+    ]);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
+    // Handle images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $file) {
+            $path = $file->store('categories', 'public'); // saves to storage/app/public/categories
+
+            $category->media()->create([
+                'media_type' => 'image',
+                'url' => '/storage/' . $path,
+            ]);
+        }
     }
+
+    return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
+}
+
 
     public function edit(Category $category)
     {

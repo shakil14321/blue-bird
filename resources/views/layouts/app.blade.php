@@ -51,7 +51,7 @@
 
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
+        <div class="layout-container text-decoration-none">
             <!-- Menu -->
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -66,7 +66,7 @@
                 <ul class="menu-inner py-1">
                     <!-- Dashboard -->
                     <li class="menu-item active">
-                        <a href="{{ url('home') }}" class="menu-link">
+                        <a href="{{ url('home') }}" class="menu-link text-decoration-none">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
                             <div data-i18n="Analytics">Dashboard</div>
                         </a>
@@ -74,7 +74,7 @@
 
                     <!-- Layouts -->
                     <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle text-decoration-none">
                             <i class="menu-icon tf-icons bx bx-layout"></i>
                             <div data-i18n="Layouts">Category</div>
                         </a>
@@ -87,7 +87,7 @@
 
                 </li> --}}
                             <li class="menu-item">
-                                <a href="{{ route('admin.categories.index') }}" class="menu-link">
+                                <a href="{{ route('admin.categories.index') }}" class="menu-link text-decoration-none">
                                     <div>All Categories</div>
                                 </a>
                             </li>
@@ -96,7 +96,7 @@
 
 
                     <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle text-decoration-none">
                             <i class="menu-icon tf-icons bx bx-layout"></i>
                             <div data-i18n="Layouts">Sub Category</div>
                         </a>
@@ -109,7 +109,7 @@
                 </li> --}}
 
                             <li class="menu-item">
-                                <a href="{{ route('admin.subcategories.index') }}" class="menu-link">
+                                <a href="{{ route('admin.subcategories.index') }}" class="menu-link text-decoration-none">
                                     <div>All Sub Categories</div>
                                 </a>
                             </li>
@@ -117,14 +117,14 @@
                     </li>
 
                     <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle text-decoration-none">
                             <i class="menu-icon tf-icons bx bx-layout"></i>
                             <div data-i18n="Layouts">User</div>
                         </a>
 
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="{{ route('admin.users.index') }}" class="menu-link">
+                                <a href="{{ route('admin.users.index') }}" class="menu-link text-decoration-none">
                                     <div data-i18n="Without menu">All Users</div>
                                 </a>
                             </li>
@@ -133,18 +133,26 @@
 
 
                     <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle text-decoration-none">
                             <i class="menu-icon tf-icons bx bx-layout"></i>
                             <div data-i18n="Layouts">Quotation</div>
                         </a>
 
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="{{ route('admin.quotations.index') }}" class="menu-link">
+                                <a href="{{ route('admin.quotations.index') }}" class="menu-link text-decoration-none">
                                     <div>All Quotation</div>
                                 </a>
                             </li>
                         </ul>
+
+                        {{-- <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="{{ route('admin.quotations.index') }}" class="menu-link">
+                                    <div>Quotation Request</div>
+                                </a>
+                            </li>
+                        </ul> --}}
                     </li>
                 </ul>
             </aside>
@@ -259,6 +267,9 @@
 
                 <!-- Place this tag in your head or just before your close body tag. -->
                 <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+                <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
 
 
 </body>

@@ -21,16 +21,16 @@ class CartController extends Controller
         return response()->json($cartItems);
     }
 
-    // // Store a new cart
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'user_id' => 'required|exists:users,id',
-    //         'quotation_id' => 'nullable|integer',
-    //     ]);
+    // Store a new cart
+    public function store(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'quotation_id' => 'nullable|integer',
+        ]);
 
-    //     return Cart::create($request->all());
-    // }
+        return Cart::create($request->all());
+    }
 
     public function remove($id)
     {

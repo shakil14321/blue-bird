@@ -1,7 +1,68 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid mt-4">
+
+<!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <title>BlueBird Events BD</title>
+    </head>
+
+
+<body>
+
+    <header>
+            <title>News Ticker</title>
+            <style>
+                body {
+                    margin: 0;
+                    font-family: Arial, sans-serif;
+                }
+
+                .news-ticker {
+                    width: 100%;
+                    background: #3a22a5fb;
+                    color: #ffffff;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    box-sizing: border-box;
+                    padding: 10px 0;
+                    position: relative;
+                }
+
+                .news-ticker p {
+                    display: inline-block;
+                    padding-left: 100%;
+                    animation: scroll 20s linear infinite;
+                    margin: 0;
+                }
+
+                @keyframes scroll {
+                    0% {
+                        transform: translateX(0%);
+                    }
+
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+            </style>
+            </head>
+            <div class="news-ticker">
+                <p> Bluebird Event Management System is now live! Organize, manage, and track all your events
+                    seamlessly with our easy-to-use platform. Stay updated with the latest happenings and never miss a beat.
+                </p>
+            </div>
+        </header>
+
+    <div class="container-fluid mt-4">
 
     <!-- Row 1: Stats Cards -->
     <div class="row mb-4">
@@ -133,4 +194,6 @@
         }
     });
 </script>
+</body>
+
 @endsection

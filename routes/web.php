@@ -15,7 +15,7 @@ Route::get('/', function () {
 });
 
 // 🔹 Laravel default auth (disable registration if only admin can add users)
-Auth::routes(['register' => false]);
+Auth::routes(['register' => true]);
 
 // 🔹 Dashboard (home after login) – only for authenticated users
 Route::get('/home', [HomeController::class, 'index'])

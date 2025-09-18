@@ -1,6 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
+
+<style>
+        /* Status badges */
+        .badge-status {
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .badge-active {
+            background-color: #90ee90;
+            /* Light green */
+        }
+
+        .badge-inactive {
+            background-color: #ff4d4d;
+            /* Red */
+        }
+
+        .icon-lg {
+            font-size: 35px;
+        }
+    </style>
+
+
+
 <div class="container">
     <h2 class="mb-4">All Quotations</h2>
 
@@ -11,45 +39,57 @@
         </div>
     </form>
 
-
-    <div class="row">
-        @forelse($quotations as $index => $quotation)
-            <div class="col-md-6 mb-3">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Quotation {{ $quotations->firstItem() + $index }}</h5>
-                        <p class="card-text">
-                            <strong>User:</strong> {{ $quotation->user->name ?? 'N/A' }} <br>
-                            <strong>Address:</strong> {{ $quotation->address }} <br>
-                            <strong>Event Date:</strong> {{ $quotation->event_date ?? 'N/A' }} <br>
-                        </p>
-                        
-
-                        {{-- Status Badge --}}
-                        <span class="badge 
-                            @if($quotation->status == 'Pending') bg-warning 
-                            @elseif($quotation->status == 'Confirmed') bg-success 
-                            @elseif($quotation->status == 'Cancelled') bg-danger 
-                            @endif
-                        ">
-                            {{ $quotation->status }}
-                        </span>
-
-                        <div class="mt-3">
-                            <a href="{{ route('admin.quotations.show', $quotation->id) }}" class="btn btn-outline-primary btn-sm">
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Address</th>
+                    <th>Event Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                @forelse($quotations as $index => $quotation)
+                    <tr>
+                        <td>{{ $quotations->firstItem() + $index }}</td>
+                        <td>{{ $quotation->user->name ?? 'N/A' }}</td>
+                        <td>{{ $quotation->address }}</td>
+                        <td>{{ $quotation->event_date ?? 'N/A' }}</td>
+                        <td>
+                            <span class="badge 
+                                @if($quotation->status == 'Pending') bg-warning 
+                                @elseif($quotation->status == 'Confirmed') bg-success 
+                                @elseif($quotation->status == 'Cancelled') bg-danger 
+                                @endif
+                            ">
+                                {{ $quotation->status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.quotations.show', $quotation->id) }}" 
+                               class="btn btn-outline-primary btn-sm">
                                 View Quotation
                             </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <p>No quotations found.</p>
-        @endforelse
-    </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">No quotations found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
 
-    <div class="mt-3">
-        {{ $quotations->links() }}
+        {{-- Pagination --}}
+        <div class="d-flex justify-content-center mt-3">
+            {{ $quotations->links() }}
+        </div>
     </div>
+</div>
+
 </div>
 @endsection
