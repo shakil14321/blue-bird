@@ -3,9 +3,10 @@
 @section('content')
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">All Categories</h5>
-    {{-- <a href="{{ route('categories.create') }}" class="btn btn-primary">Add Category</a>
-  </div> --}}
+    <h5 class="mb-3">All Categories</h5>
+    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Add Category</a>
+  </div>
+  
   <div class="card-body">
     @if(session('success'))
       <div class="alert alert-success">{{ session('success') }}</div>
@@ -29,6 +30,7 @@
                 <td>{{ $category->name }}</td>
                 <td>{{ $category->created_at->format('Y-m-d') }}</td>
                 <td>
+                  <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-warning">Edit</a>
                   <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Delete this category?');">
                     @csrf
                     @method('DELETE')

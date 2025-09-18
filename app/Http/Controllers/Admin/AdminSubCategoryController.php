@@ -35,6 +35,26 @@ class AdminSubCategoryController extends Controller
                          ->with('success', 'Sub Category created successfully.');
     }
 
+    public function edit(SubCategory $subcategory)
+    {
+        $categories = Category::all();
+        return view('admin.subcategories.edit', compact('subcategory', 'categories'));
+    }
+
+    public function update(Request $request, SubCategory $subcategory)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name'        => 'required|string|max:50',
+            'description' => 'nullable|string',
+        ]);
+
+        $subcategory->update($request->only('category_id', 'name', 'description'));
+
+        return redirect()->route('admin.subcategories.index')
+                         ->with('success', 'Sub Category updated successfully.');
+    }
+    
     public function destroy(SubCategory $subcategory)
     {
         $subcategory->delete();

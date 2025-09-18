@@ -31,8 +31,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Public routes
 
-Route::apiResource('categories', CategoryController::class);
-Route::apiResource('carts', CartController::class);
+
+Route::get('cart', [CartController::class, 'index']);
+Route::post('cart/add', [CartController::class, 'add']);
+Route::delete('cart/remove/{id}', [CartController::class, 'remove']);
+Route::delete('cart/clear', [CartController::class, 'clear']);
+
 Route::apiResource('cart-items', CartItemController::class);
 Route::apiResource('subcategories', SubCategoryController::class);
 Route::get('/subcategories/{id}', [SubCategoryController::class, 'show']);
@@ -77,3 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
+Route::prefix('categories')->group(function () {
+    Route::get('/', [CategoryController::class, 'index']);   // get all categories
+    Route::get('/{id}', [CategoryController::class, 'show']); // get single category
+});

@@ -24,4 +24,8 @@ class SubCategory extends Model
         return $this->morphMany(Media::class, 'mediaable');
     }
     
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }

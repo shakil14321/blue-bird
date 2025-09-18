@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class AdminUserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(20);
         return view('admin.users.index', compact('users'));
     }
 
@@ -23,7 +23,7 @@ class UserController extends Controller
     public function toggleStatus($id)
     {
         $user = User::findOrFail($id);
-        $user->status = !$user->status; // assuming you have a `status` column (1=active, 0=inactive)
+        $user->status = !$user->status;
         $user->save();
 
         return redirect()->back()->with('success', 'User status updated!');

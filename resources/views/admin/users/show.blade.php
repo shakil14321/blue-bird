@@ -9,7 +9,6 @@
     <p><strong>Name:</strong> {{ $user->name }}</p>
     <p><strong>Email:</strong> {{ $user->email }}</p>
     <p><strong>Phone:</strong> {{ $user->phone }}</p>
-    <p><strong>Role:</strong> {{ $user->role }}</p>
     <p>
       <strong>Status:</strong>
       @if($user->status)
@@ -18,7 +17,8 @@
         <span class="badge bg-danger">Inactive</span>
       @endif
     </p>
-    <a href="{{ route('users.index') }}" class="btn btn-secondary">Back</a>
+    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Back</a>
   </div>
 </div>
 @endsection
+

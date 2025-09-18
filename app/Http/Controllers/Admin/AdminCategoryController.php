@@ -30,6 +30,22 @@ class AdminCategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
 
+    public function edit(Category $category)
+    {
+        return view('admin.categories.edit', compact('category'));
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:25'
+        ]);
+
+        $category->update($request->only('name'));
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
+    }
+
     public function destroy(Category $category)
     {
         $category->delete();

@@ -31,6 +31,8 @@
                 <td>{{ $sub->name }}</td>
                 <td>{{ $sub->description }}</td>
                 <td>
+                   <a href="{{ route('admin.subcategories.edit', $sub->id) }}" class="btn btn-sm btn-warning">Edit</a>
+
                   <form action="{{ route('admin.subcategories.destroy', $sub) }}" method="POST" style="display:inline" onsubmit="return confirm('Delete this subcategory?');">
                     @csrf
                     @method('DELETE')

@@ -37,12 +37,6 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-    // GET /api/users/{id}
-    public function show($id)
-    {
-        return response()->json(User::findOrFail($id));
-    }
-
     // PUT /api/users/{id}
     public function update(Request $request, $id)
     {

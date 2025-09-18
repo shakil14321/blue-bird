@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cart_id')->constrained('carts')->onDelete('cascade'); 
             $table->foreignId('sub_category_id')->constrained('subcategories')->onDelete('cascade');
+            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }

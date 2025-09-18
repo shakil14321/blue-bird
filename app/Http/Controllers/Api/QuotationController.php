@@ -27,6 +27,10 @@ class QuotationController extends Controller
         $data = $request->validate([
             'cart_id' => 'required|exists:carts,id',
             'address' => 'required|string',
+            'status' => 'nullable|string|in:Pending,Confirmed,Cancelled',
+            'event_date' => 'nullable|date',
+            'budget' => 'nullable|numeric',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'request_details' => 'nullable|string'
         ]);
 
@@ -43,6 +47,10 @@ class QuotationController extends Controller
             'cart_id' => $cart->id,
             'user_id' => $request->user()->id,
             'address' => $data['address'],
+            'status' => $data['status'] ?? 'Pending',
+            'event_date' => $data['event_date'] ?? null,
+            'budget' => $data['budget'] ?? null,
+            'discount' => $data['discount'] ?? null,
             'request_details' => $data['request_details'] ?? null,
         ]);
 
