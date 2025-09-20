@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CartController extends Controller
 {
     // Get all carts
-   // View cart
+    // View cart
     public function index()
     {
         $cartItems = Cart::with('subcategory.category')
@@ -25,19 +25,42 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'quotation_id' => 'nullable|integer',
+            'subcategories_id' => 'required|exists:subcategories,id',
+            'quantity' => 'required|integer|min:1'
         ]);
 
-        return Cart::create($request->all());
+        // Check if the item already exists in the cart
+        $cartItem = Cart::where('user_id', Auth::id())
+            ->where('subcategories_id', $request->subcategories_id)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity = $request->quantity;
+            $cartItem->save();
+        } else {
+            $cartItem = Cart::create([
+                'user_id' => Auth::id(),
+                'subcategories_id' => $request->subcategories_id,
+                'quantity' => $request->quantity
+            ]);
+        }
+
+        return response()->json($cartItem->load('subcategory.category'), 201);
+
     }
 
     public function remove($id)
     {
-        $item = Cart::where('user_id', Auth::id())->findOrFail($id);
-        $item->delete();
+        $cartItem = Cart::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->first();
 
-        return response()->json(['message' => 'Item removed']);
+        if (!$cartItem) {
+            return response()->json(['message' => 'Cart item not found'], 404);
+        }
+
+        $cartItem->delete();
+        return response()->json(['message' => 'Cart item removed']);
     }
 
     // Delete cart
@@ -51,21 +74,21 @@ class CartController extends Controller
     {
         $request->validate([
             'subcategory_id' => 'required|exists:subcategories,id',
-            'quantity'       => 'required|integer|min:1'
+            'quantity' => 'required|integer|min:1'
         ]);
 
         $subcategory = SubCategory::findOrFail($request->subcategory_id);
 
         $cartItem = Cart::firstOrNew([
-            'user_id'       => Auth::id(),
-            'subcategory_id'=> $subcategory->id
+            'user_id' => Auth::id(),
+            'subcategory_id' => $subcategory->id
         ]);
 
         $cartItem->quantity += $request->quantity;
         $cartItem->save();
 
         return response()->json([
-            'message'   => 'Subcategory added to cart',
+            'message' => 'Subcategory added to cart',
             'cart_item' => $cartItem->load('subcategory.category')
         ]);
     }

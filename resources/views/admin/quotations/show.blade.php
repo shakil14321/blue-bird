@@ -23,15 +23,52 @@
 
             <p>
                 <strong>Status:</strong>
-                <span class="badge 
-                    @if($quotation->status == 'Pending') bg-warning 
-                    @elseif($quotation->status == 'Confirmed') bg-success 
-                    @elseif($quotation->status == 'Cancelled') bg-danger 
+                <span class="badge
+                    @if($quotation->status == 'Pending') bg-warning
+                    @elseif($quotation->status == 'Confirmed') bg-success
+                    @elseif($quotation->status == 'Cancelled') bg-danger
                     @endif
                 ">
                     {{ $quotation->status }}
                 </span>
             </p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Quotation Details #</h5>
+            @if($quotation->quotationDetails && count($quotation->quotationDetails) > 0)
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($quotation->quotationDetails as $item)
+                            @php
+                                $subcategories = $item->subcategory;
+                            @endphp
+                            <tr>
+                                <td>{{ $subcategories->name ?? 'N/A' }}</td>
+                                <td>{{ $subcategories->description ?? 'N/A' }}</td>
+                                <td>{{ $item['quantity'] }}</td>
+                                <td>
+                                    <input type="number" class="form-control" value="{{ number_format($item['unit_price'], 2) }}">
+                                </td>
+                                <td>${{ number_format($item['quantity'] * $item['unit_price'], 2) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p>No items found for this quotation.</p>
+            @endif
         </div>
     </div>
 
