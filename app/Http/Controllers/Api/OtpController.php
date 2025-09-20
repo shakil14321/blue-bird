@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Otp;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,24 +15,22 @@ class OtpController extends Controller
             'phone' => 'required|string|max:15'
         ]);
 
-        $otpCode = rand(100000, 999999);
+        $otpCode = rand(10000, 99999);
+        // check if phone exists in the database
+        $find_user = User::where('phone', $request->phone)->first();
+        if (!$find_user) {
+            return response()->json(['message' => 'Phone number not registered'], 404);
+        }
 
-        // Delete any existing OTPs for this phone
-        Otp::where('phone', $request->phone)->delete();
+        // update new otp if exists
+        $find_user->update(['otp' => $otpCode]);
 
-        $otp = Otp::create([
-            'phone'   => $request->phone,
-            'code'      => $otpCode,
-            'expired_at' => now()->addMinutes(5), // expire in 5 mins
-        ]);
+        // send OTP via SMS here
 
-        // Here integrate SMS sending API (Twilio, Nexmo etc.)
-        // Example: SmsService::send($otp->user->phone, "Your OTP is $otpCode");
+        // return response
+        return response()->json(['message' => 'OTP sent successfully']);
 
-        return response()->json([
-            'message' => 'OTP generated successfully',
-            'otp' => $otpCode, //  In production, DO NOT return OTP in API response
-        ]);
+
     }
 
     // Verify OTP
@@ -39,20 +38,23 @@ class OtpController extends Controller
     {
         $request->validate([
             'phone' => 'required|string',
-            'code' => 'required|string|digits:6'
+            'code' => 'required|string|digits:5'
         ]);
-
-        $otp = Otp::where('phone', $request->phone)
-            ->where('code', $request->code)
-            ->where('expired_at', '>=', now())
-            ->latest()
-            ->first();
-
-        if (!$otp) {
-            return response()->json(['message' => 'Invalid or expired OTP'], 400);
+        // check if phone exists in the database
+        $find_user = User::where('phone', $request->phone)->first();
+        if (!$find_user) {
+            return response()->json(['message' => 'Phone number not registered'], 404);
+        }
+        // check if otp matches
+        if ($find_user->otp != $request->code) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
         }
 
-        return response()->json(['message' => 'OTP verified successfully']);
+        // clear otp
+        $find_user->update(['otp' => null]);
+
+        return response()->json(['message' => 'OTP verified successfully, you can now login']);
+
     }
 
     // Delete expired OTPs

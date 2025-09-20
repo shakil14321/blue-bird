@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // FK to users table 
-            $table->unsignedBigInteger('quotation_id')->nullable(); // FK (optional, depends on another table later)
+            // usigned big integer
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('subcategories_id')->nullable();
+            $table->integer('quantity')->default(1);
+            // foreign key constraint
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('subcategories_id')->references('id')->on('subcategories')->onDelete('set null');
+
             $table->timestamps();
         });
     }
@@ -24,6 +30,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // disable foreign key checks to avoid issues during rollback
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('carts');
+        Schema::enableForeignKeyConstraints();
     }
 };

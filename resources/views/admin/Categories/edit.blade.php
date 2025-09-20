@@ -12,7 +12,7 @@
 
       <div class="form-group mb-3">
         <label for="name">Category Name</label>
-        <input type="text" name="name" id="name" class="form-control" 
+        <input type="text" name="name" id="name" class="form-control"
                value="{{ old('name', $category->name) }}" required>
         @error('name')
           <span class="text-danger">{{ $message }}</span>
@@ -23,7 +23,7 @@
         <label>Existing Images</label>
         <div class="d-flex flex-wrap gap-2 mb-2">
             @forelse ($category->media as $media)
-                <img src="{{ $media->url }}" alt="Category Image" 
+                <img src="{{ asset($media->url) }}" alt="Category Image"
                      style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
             @empty
                 <span class="text-muted">No images</span>

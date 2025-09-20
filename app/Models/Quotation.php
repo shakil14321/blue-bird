@@ -6,20 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quotation extends Model
 {
-    protected $fillable = [
-        'cart_id',
-        'user_id',
-        'address',
-        'status',
-        'event_date',
-        'budget',
-        'discount',
-        'request_details',
-        'response_details',
-        'admin_id'
-    ];
 
-    public function cart(){ return $this->belongsTo(Cart::class); }
-    public function user(){ return $this->belongsTo(User::class); }
-    public function admin(){ return $this->belongsTo(User::class, 'admin_id'); }
+    protected $guarded = [];
+
+    // users
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // quotation details
+    public function quotationDetails()
+    {
+        return $this->hasMany(QuotationDetail::class, 'quotation_id');
+    }
+
 }

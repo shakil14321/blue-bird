@@ -20,32 +20,33 @@ class AdminCategoryController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'name'   => 'required|string|max:25',
-        'images' => 'nullable|array',
-        'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:25',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
+        ]);
 
-    // Create category
-    $category = Category::create([
-        'name' => $request->name
-    ]);
+        // Create category
+        $category = Category::create([
+            'name' => $request->name
+        ]);
 
-    // Handle images
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $file) {
-            $path = $file->store('categories', 'public'); // saves to storage/app/public/categories
+        // Handle images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                // store image with move function
+                $path = $file->move('uploads/categories', uniqid() . '_' . $file->getClientOriginalName());
 
-            $category->media()->create([
-                'media_type' => 'image',
-                'url' => '/storage/' . $path,
-            ]);
+                $category->media()->create([
+                    'media_type' => 'image',
+                    'url' => $path,
+                ]);
+            }
         }
-    }
 
-    return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
-}
+        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
+    }
 
 
     public function edit(Category $category)
@@ -58,6 +59,19 @@ class AdminCategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:25'
         ]);
+
+        // if  image is uploaded update it
+        if ($request->hasFile('images')) {
+            // upload new images
+            foreach ($request->file('images') as $file) {
+                $path = $file->move('uploads/categories', uniqid() . '_' . $file->getClientOriginalName());
+
+                $category->media()->create([
+                    'media_type' => 'image',
+                    'url' => $path,
+                ]);
+            }
+        }
 
         $category->update($request->only('name'));
 

@@ -9,7 +9,7 @@ class Cart extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'quotation_id'];
+    protected $fillable = ['user_id', 'subcategories_id', 'quantity'];
 
     // A cart belongs to a user
     public function user()
@@ -21,5 +21,10 @@ class Cart extends Model
     public function items()
     {
         return $this->hasMany(CartItem::class);
+    }
+    // subcategory
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategory::class, 'subcategories_id');
     }
 }

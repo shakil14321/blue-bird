@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Cart;
 use App\Models\Quotation;
+use App\Models\QuotationDetail;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class QuotationController extends Controller
 {
@@ -25,39 +28,54 @@ class QuotationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'cart_id' => 'required|exists:carts,id',
-            'address' => 'required|string',
-            'status' => 'nullable|string|in:Pending,Confirmed,Cancelled',
+            'name' => 'required|string|max:255',
             'event_date' => 'nullable|date',
-            'budget' => 'nullable|numeric',
-            'discount' => 'nullable|numeric|min:0|max:100',
-            'request_details' => 'nullable|string'
+            'phone' => 'required|string|max:20',
+            'budget' => 'nullable|numeric|min:0',
+            'location' => 'required|string|max:255',
         ]);
 
-        $cart = Cart::with('items')->findOrFail($data['cart_id']);
+        // use try catch with database transaction
+        try {
+            DB::beginTransaction();
 
-        // Ensure cart belongs to the user
-        abort_unless($cart->user_id === $request->user()->id, 403, 'Unauthorized action.');
+            $carts = Cart::where('user_id', $request->user()->id)->get();
+            if (count($carts) === 0) {
+                return response()->json(['message' => 'Cart is empty. Add items before requesting a quotation.'], 400);
+            }
+            $quotation = Quotation::create([
+                'user_id' => $request->user()->id,
+                'name' => $data['name'],
+                'event_date' => $data['event_date'] ?? null,
+                'phone' => $data['phone'],
+                'budget' => $data['budget'] ?? null,
+                'location' => $data['location'],
+                'status' => 'Pending',
+            ]);
 
-        if ($cart->items->isEmpty()) {
-            return response()->json(['message' => 'Cart has no items. Add subcategories first.'], 422);
+            // QuotationDetail creation logic can be added here if needed
+            foreach ($carts as $cart) {
+                QuotationDetail::create([
+                    'quotation_id' => $quotation->id,
+                    'subcategories_id' => $cart->subcategories_id,
+                    'quantity' => $cart->quantity,
+                ]);
+            }
+            // Clear user's cart after creating quotation
+            Cart::where('user_id', $request->user()->id)->delete();
+
+            DB::commit();
+            // return response json with for quotation with quotation details
+            return response()->json([
+                'message' => 'Quotation request created successfully.',
+                'quotation' => $quotation->load('quotationDetails')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Failed to create quotation request.', 'error' => $e->getMessage()], 500);
         }
 
-        $quotation = Quotation::create([
-            'cart_id' => $cart->id,
-            'user_id' => $request->user()->id,
-            'address' => $data['address'],
-            'status' => $data['status'] ?? 'Pending',
-            'event_date' => $data['event_date'] ?? null,
-            'budget' => $data['budget'] ?? null,
-            'discount' => $data['discount'] ?? null,
-            'request_details' => $data['request_details'] ?? null,
-        ]);
 
-        return response()->json(
-            $quotation->load('cart.items.subcategory', 'user'),
-            201
-        );
     }
 
     // 3. Show a single quotation

@@ -11,7 +11,7 @@ class AdminQuotationController extends Controller
     // List all quotations with search
     public function index(Request $request)
     {
-        $query = Quotation::with(['cart.items.subcategory', 'user', 'admin']);
+        $query = Quotation::with(['quotationDetails', 'user']);
 
         // Search by ID or User name
         if ($request->has('search') && $request->search != '') {
@@ -30,7 +30,7 @@ class AdminQuotationController extends Controller
     // Show single quotation
     public function show(Quotation $quotation)
     {
-        $quotation->load(['cart.items.subcategory', 'user', 'admin']);
+        $quotation->load(['quotationDetails', 'user']);
         return view('admin.quotations.show', compact('quotation'));
     }
 

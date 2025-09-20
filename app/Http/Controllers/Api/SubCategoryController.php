@@ -14,20 +14,14 @@ class SubCategoryController extends Controller
         return SubCategory::with('category')->get();
     }
 
-   
+
     // Show single subcategory
     public function show($id)
     {
-        return SubCategory::with('category')->findOrFail($id);
-         // Find related subcategories from the same category
-        $related = SubCategory::where('category_id', $subcategory->category_id)
-            ->where('id', '!=', $subcategory->id)
-            ->limit(5) // limit to 5 suggestions
-            ->get();
-
-        return response()->json([
-            'subcategory' => $subcategory,
-            'related' => $related
-        ]);
+        $subcategory = SubCategory::with(['category', 'media'])->find($id);
+        if (!$subcategory) {
+            return response()->json(['message' => 'SubCategory not found'], 404);
+        }
+        return response()->json($subcategory, 200);
     }
 }

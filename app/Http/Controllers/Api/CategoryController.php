@@ -17,7 +17,10 @@ class CategoryController extends Controller
     // Show single category
     public function show($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::with('subcategories.media')->find($id);
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
         return response()->json($category, 200);
     }
 }

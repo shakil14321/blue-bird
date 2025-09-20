@@ -32,7 +32,7 @@
 <div class="container">
     <h2 class="mb-4">All Quotations</h2>
 
-    <form action="{{ route('admin.quotations.index') }}" method="GET" class="mb-4">        
+    <form action="{{ route('admin.quotations.index') }}" method="GET" class="mb-4">
         <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="Search by ID or User Name" value="{{ request('search') }}">
             <button class="btn btn-primary" type="submit">Search</button>
@@ -57,20 +57,20 @@
                     <tr>
                         <td>{{ $quotations->firstItem() + $index }}</td>
                         <td>{{ $quotation->user->name ?? 'N/A' }}</td>
-                        <td>{{ $quotation->address }}</td>
+                        <td>{{ $quotation->location }}</td>
                         <td>{{ $quotation->event_date ?? 'N/A' }}</td>
                         <td>
-                            <span class="badge 
-                                @if($quotation->status == 'Pending') bg-warning 
-                                @elseif($quotation->status == 'Confirmed') bg-success 
-                                @elseif($quotation->status == 'Cancelled') bg-danger 
+                            <span class="badge
+                                @if($quotation->status == 'Pending') bg-warning
+                                @elseif($quotation->status == 'Confirmed') bg-success
+                                @elseif($quotation->status == 'Cancelled') bg-danger
                                 @endif
                             ">
                                 {{ $quotation->status }}
                             </span>
                         </td>
                         <td>
-                            <a href="{{ route('admin.quotations.show', $quotation->id) }}" 
+                            <a href="{{ route('admin.quotations.show', $quotation->id) }}"
                                class="btn btn-outline-primary btn-sm">
                                 View Quotation
                             </a>

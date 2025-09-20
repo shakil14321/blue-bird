@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cart_id')->constrained('carts')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('address');
-            $table->longText('request_details')->nullable();
-            $table->longText('response_details')->nullable();
-            $table->foreignId('admin_id')->nullable()->constrained('users')->nullOnDelete();
+
+            $table->string('name');
+            $table->date('event_date')->nullable();
+            $table->string('phone');
+            $table->decimal('budget', 12, 2)->nullable();
+            $table->string('location');
+
+            $table->string('status')->default('Pending');
+
             $table->timestamps();
         });
     }
@@ -28,6 +32,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // disable foreign key checks to avoid issues during drop
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('quotations');
+        Schema::enableForeignKeyConstraints();
     }
 };
