@@ -33,8 +33,8 @@
                                         @if ($category->media->count())
                                             <div class="d-flex flex-wrap gap-2">
                                                 @foreach ($category->media as $media)
-                                                    <img src="{{ $media->url }}" 
-                                                         alt="Category Image" 
+                                                    <img src="{{ asset($media->url) }}"
+                                                         alt="Category Image"
                                                          style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
                                                 @endforeach
                                             </div>
